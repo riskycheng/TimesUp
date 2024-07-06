@@ -1,9 +1,3 @@
-//
-//  MainContentView.swift
-//  TimesUp
-//
-//  Created by Jian Cheng on 2024/7/6.
-//
 import SwiftUI
 
 struct MainContentView: View {
@@ -109,24 +103,29 @@ struct SettingsGrid: View {
         VStack(spacing: 60) {
             HStack(spacing: 20) {
                 
-                SettingsItem(icon: .custom(name: "SettingsDisplayMode"), title: "显示内容", subtitle: "时钟", 
-                             buttonType: .customImageButton("OptionsMenu") {
-                    print("the DisplayMode option clicked!")
-                })
+                SettingsItem(icon: .custom(name: "SettingsDisplayMode"), title: "显示内容", subtitle: "时钟",
+                             buttonType: .customImageButton("OptionsMenu", [
+                                SettingsItem.MenuItem(title: "Speed", icon: .system(name: "speedometer"), action: { print("Speed option clicked") }),
+                                SettingsItem.MenuItem(title: "Refresh", icon: .system(name: "arrow.clockwise"), action: { print("Refresh option clicked") }),
+                                SettingsItem.MenuItem(title: "Clock", icon: .system(name: "clock"), action: { print("Clock option clicked") })
+                             ]))
                 
-                SettingsItem(icon: .custom(name: "SettingsClock"), title: "时钟格式", subtitle: "格式|时:分:秒:毫秒", 
-                             buttonType: .customImageButton("OptionsMenu") {
-                    print("the ClockFormat option clicked!")
-                })
+                SettingsItem(icon: .custom(name: "SettingsClock"), title: "时钟格式", subtitle: "格式|时:分:秒:毫秒",
+                             buttonType: .customImageButton("OptionsMenu", [
+                                SettingsItem.MenuItem(title: "MS", icon: .custom(name: "SettingsClock"), action: { print("MS option clicked") }),
+                                SettingsItem.MenuItem(title: "SS-MS", icon: .custom(name: "SettingsClock"), action: { print("SS-MS option clicked") }),
+                                SettingsItem.MenuItem(title: "MM-SS-MS", icon: .custom(name: "SettingsClock"), action: { print("MM-SS-MS option clicked") }),
+                                SettingsItem.MenuItem(title: "HH-MM-SS-MS", icon: .custom(name: "SettingsClock"), action: { print("HH-MM-SS-MS option clicked") })
+                             ]))
                 
             }
             
             HStack(spacing: 20) {
                 
-                SettingsItem(icon: .custom(name: "SettingsHourglass"), title: "倒计时", subtitle: "最近事件|茅台", 
+                SettingsItem(icon: .custom(name: "SettingsHourglass"), title: "倒计时", subtitle: "最近事件|茅台",
                              buttonType: .toggle($toggleState_countDown))
                 
-                SettingsItem(icon: .custom(name: "SettingsIsland"), title: "灵动岛", subtitle: "设备状态|支持", 
+                SettingsItem(icon: .custom(name: "SettingsIsland"), title: "灵动岛", subtitle: "设备状态|支持",
                              buttonType: .toggle($toggleState_isLand))
                 
             }
@@ -150,7 +149,13 @@ struct SettingsItem: View {
     enum ButtonType {
         case toggle(Binding<Bool>)
         case systemImageButton(String, () -> Void)
-        case customImageButton(String, () -> Void)
+        case customImageButton(String, [MenuItem])
+    }
+    
+    struct MenuItem {
+        let title: String
+        let icon: IconType?
+        let action: () -> Void
     }
 
     var body: some View {
@@ -177,8 +182,28 @@ struct SettingsItem: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                     }
-                case .customImageButton(let imageName, let action):
-                    Button(action: action) {
+                case .customImageButton(let imageName, let menuItems):
+                    Menu {
+                        ForEach(menuItems, id: \.title) { item in
+                            Button(action: item.action) {
+                                if let icon = item.icon {
+                                    switch icon {
+                                    case .system(let name):
+                                        Label(item.title, systemImage: name)
+                                    case .custom(let name):
+                                        HStack {
+                                            Image(name)
+                                                .resizable()
+                                                .frame(width: 16, height: 16)
+                                            Text(item.title)
+                                        }
+                                    }
+                                } else {
+                                    Text(item.title)
+                                }
+                            }
+                        }
+                    } label: {
                         Image(imageName)
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -197,7 +222,6 @@ struct SettingsItem: View {
         .frame(width: 160, height: 100)
     }
 }
-
 
 #Preview {
     MainContentView()
