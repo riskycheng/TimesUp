@@ -11,6 +11,10 @@
 		CF4D83FC2C37F71000D07701 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D83FB2C37F71000D07701 /* ContentView.swift */; };
 		CF4D83FE2C37F71200D07701 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF4D83FD2C37F71200D07701 /* Assets.xcassets */; };
 		CF4D84012C37F71200D07701 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF4D84002C37F71200D07701 /* Preview Assets.xcassets */; };
+		CF4D840E2C38F14A00D07701 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D840D2C38F14A00D07701 /* K.swift */; };
+		CF4D84102C38FE8C00D07701 /* MainContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D840F2C38FE8C00D07701 /* MainContentView.swift */; };
+		CF4D84122C38FE9F00D07701 /* ListContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84112C38FE9F00D07701 /* ListContentView.swift */; };
+		CF4D84142C38FEBA00D07701 /* SettingsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84132C38FEBA00D07701 /* SettingsContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		CF4D83FB2C37F71000D07701 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CF4D83FD2C37F71200D07701 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF4D84002C37F71200D07701 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CF4D840D2C38F14A00D07701 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
+		CF4D840F2C38FE8C00D07701 /* MainContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContentView.swift; sourceTree = "<group>"; };
+		CF4D84112C38FE9F00D07701 /* ListContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListContentView.swift; sourceTree = "<group>"; };
+		CF4D84132C38FEBA00D07701 /* SettingsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +59,10 @@
 		CF4D83F82C37F71000D07701 /* TimesUp */ = {
 			isa = PBXGroup;
 			children = (
+				CF4D840C2C38F12A00D07701 /* Controllers */,
+				CF4D840B2C38F12000D07701 /* Views */,
+				CF4D840A2C38F11A00D07701 /* Models */,
+				CF4D84092C38F11000D07701 /* Utils */,
 				CF4D83F92C37F71000D07701 /* TimesUpApp.swift */,
 				CF4D83FB2C37F71000D07701 /* ContentView.swift */,
 				CF4D83FD2C37F71200D07701 /* Assets.xcassets */,
@@ -65,6 +77,38 @@
 				CF4D84002C37F71200D07701 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CF4D84092C38F11000D07701 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				CF4D840D2C38F14A00D07701 /* K.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		CF4D840A2C38F11A00D07701 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		CF4D840B2C38F12000D07701 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CF4D840F2C38FE8C00D07701 /* MainContentView.swift */,
+				CF4D84112C38FE9F00D07701 /* ListContentView.swift */,
+				CF4D84132C38FEBA00D07701 /* SettingsContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CF4D840C2C38F12A00D07701 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,7 +182,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF4D83FC2C37F71000D07701 /* ContentView.swift in Sources */,
+				CF4D840E2C38F14A00D07701 /* K.swift in Sources */,
 				CF4D83FA2C37F71000D07701 /* TimesUpApp.swift in Sources */,
+				CF4D84142C38FEBA00D07701 /* SettingsContentView.swift in Sources */,
+				CF4D84102C38FE8C00D07701 /* MainContentView.swift in Sources */,
+				CF4D84122C38FE9F00D07701 /* ListContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
