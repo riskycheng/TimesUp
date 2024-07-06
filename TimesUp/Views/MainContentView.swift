@@ -103,36 +103,87 @@ struct ControlButton: View {
 }
 
 struct SettingsGrid: View {
+    @State private var toggleState_countDown = true
+    @State private var toggleState_isLand = true
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 60) {
             HStack(spacing: 20) {
-                SettingsItem(icon: "text.book.closed.fill", title: "显示内容", subtitle: "时钟")
-                SettingsItem(icon: "clock", title: "时钟格式", subtitle: "格式 | 时:分:秒")
+                
+                SettingsItem(icon: .custom(name: "SettingsDisplayMode"), title: "显示内容", subtitle: "时钟", 
+                             buttonType: .customImageButton("OptionsMenu") {
+                    print("the DisplayMode option clicked!")
+                })
+                
+                SettingsItem(icon: .custom(name: "SettingsClock"), title: "时钟格式", subtitle: "格式|时:分:秒:毫秒", 
+                             buttonType: .customImageButton("OptionsMenu") {
+                    print("the ClockFormat option clicked!")
+                })
+                
             }
-        
+            
             HStack(spacing: 20) {
-                SettingsItem(icon: "hourglass.bottomhalf.fill", title: "倒计时", subtitle: "最近事件 | 茑台")
-                SettingsItem(icon: "island.tropical", title: "灵动岛", subtitle: "设备状态 | 支持")
+                
+                SettingsItem(icon: .custom(name: "SettingsHourglass"), title: "倒计时", subtitle: "最近事件|茅台", 
+                             buttonType: .toggle($toggleState_countDown))
+                
+                SettingsItem(icon: .custom(name: "SettingsIsland"), title: "灵动岛", subtitle: "设备状态|支持", 
+                             buttonType: .toggle($toggleState_isLand))
+                
             }
         }
-        .padding()
+        .padding(.top, 40)
+        
     }
 }
 
 struct SettingsItem: View {
-    var icon: String
+    var icon: IconType
     var title: String
     var subtitle: String
-    
+    var buttonType: ButtonType
+
+    enum IconType {
+        case system(name: String)
+        case custom(name: String)
+    }
+
+    enum ButtonType {
+        case toggle(Binding<Bool>)
+        case systemImageButton(String, () -> Void)
+        case customImageButton(String, () -> Void)
+    }
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Image(systemName: icon)
-                    .resizable()
-                    .frame(width: 40, height: 40)
+                switch icon {
+                case .system(let name):
+                    Image(systemName: name)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                case .custom(let name):
+                    Image(name)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                }
                 Spacer()
-                Toggle("", isOn: .constant(true))
-                    .labelsHidden()
+                switch buttonType {
+                case .toggle(let isOn):
+                    Toggle("", isOn: isOn)
+                        .labelsHidden()
+                case .systemImageButton(let imageName, let action):
+                    Button(action: action) {
+                        Image(systemName: imageName)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                case .customImageButton(let imageName, let action):
+                    Button(action: action) {
+                        Image(imageName)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                }
             }
             Text(title)
                 .font(.headline)
@@ -146,6 +197,7 @@ struct SettingsItem: View {
         .frame(width: 160, height: 100)
     }
 }
+
 
 #Preview {
     MainContentView()
