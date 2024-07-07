@@ -7,12 +7,21 @@ struct MainContentView: View {
     var body: some View {
         VStack {
             HeaderView()
-            TimerView(selectedFormat: $selectedClockFormat)
-            ControlButton()
-            SettingsGrid(selectedClockFormat: $selectedClockFormat, selectedDisplayMode: $selectedDisplayMode)
-            Spacer()
+            
+            VStack {
+                TimerView(selectedFormat: $selectedClockFormat)
+                ControlButton()
+                SettingsGrid(selectedClockFormat: $selectedClockFormat, selectedDisplayMode: $selectedDisplayMode)
+                Spacer()
+            }
+            .background(.white)
+            .cornerRadius(20.0)
+            .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
+            
+            
         }
-        .padding()
+        .edgesIgnoringSafeArea(.top)
+        .background(.gray)
     }
 }
 
@@ -22,12 +31,17 @@ struct HeaderView: View {
             Text("抢购时钟")
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(alignment: .center)
+                .padding(EdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 0))
             Spacer()
             Image(systemName: "timer")
                 .resizable()
                 .frame(width: 40, height: 40)
         }
-        .padding()
+        .frame(maxWidth: .infinity)
+        .frame(height: 160)
+        .background(.mainContentHeaderCyran)
     }
 }
 
@@ -66,10 +80,8 @@ struct TimerView: View {
                     Spacer()
                     
                     VStack {
-                        Spacer()
                         Text(currentTimeFormatted)
                             .font(.system(size: 30, weight: .medium, design: .monospaced))
-                        Spacer()
                     }
                     .frame(width: geometry.size.width * 0.6, alignment: .center)
                 }
@@ -81,6 +93,7 @@ struct TimerView: View {
         .onReceive(timer) { input in
             self.currentTime = input
         }
+        .frame(height: 150)
     }
     
     private var currentTimeFormatted: String {
