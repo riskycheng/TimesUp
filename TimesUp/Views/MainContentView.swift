@@ -1,12 +1,15 @@
 import SwiftUI
 
 struct MainContentView: View {
+    @State private var selectedClockFormat: String? = "HH-MM-SS-MS"
+    @State private var selectedDisplayMode: String? = "Clock"
+    
     var body: some View {
         VStack {
             HeaderView()
-            TimerView()
+            TimerView(selectedFormat: $selectedClockFormat)
             ControlButton()
-            SettingsGrid()
+            SettingsGrid(selectedClockFormat: $selectedClockFormat, selectedDisplayMode: $selectedDisplayMode)
             Spacer()
         }
         .padding()
@@ -30,6 +33,7 @@ struct HeaderView: View {
 
 struct TimerView: View {
     @State private var currentTime = Date()
+    @Binding var selectedFormat: String?
     
     private let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
@@ -43,22 +47,35 @@ struct TimerView: View {
                 .frame(height: 120)
                 .shadow(radius: 10)
             
-            HStack {
-                ZStack {
-                    Image("CalendarEmpty")
-                        .resizable()
-                        .frame(width: 90, height: 90) // Increase size of the calendar icon
-                    Text(currentDayFormatted)
-                        .font(.system(size: 30, weight: .bold, design: .monospaced))
-                        .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
+            GeometryReader { geometry in
+                HStack {
+                    VStack {
+                        Spacer()
+                        ZStack {
+                            Image("CalendarEmpty")
+                                .resizable()
+                                .frame(width: 90, height: 90)
+                            Text(currentDayFormatted)
+                                .font(.system(size: 30, weight: .bold, design: .monospaced))
+                                .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
+                        }
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width * 0.2, alignment: .center)
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Spacer()
+                        Text(currentTimeFormatted)
+                            .font(.system(size: 30, weight: .medium, design: .monospaced))
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width * 0.6, alignment: .center)
                 }
-                .padding(.leading, -10)
-                
-                Text(currentTimeFormatted)
-                    .font(.system(size: 30, weight: .medium, design: .monospaced))
+                .padding()
+                .foregroundColor(.white)
             }
-            .padding()
-            .foregroundColor(.white)
         }
         .padding()
         .onReceive(timer) { input in
@@ -68,7 +85,16 @@ struct TimerView: View {
     
     private var currentTimeFormatted: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss.S"
+        switch selectedFormat {
+        case "SS-MS":
+            formatter.dateFormat = "ss.S"
+        case "MM-SS-MS":
+            formatter.dateFormat = "mm:ss.S"
+        case "HH-MM-SS-MS":
+            formatter.dateFormat = "HH:mm:ss.S"
+        default:
+            formatter.dateFormat = "HH:mm:ss.S"
+        }
         return formatter.string(from: currentTime)
     }
     
@@ -97,44 +123,44 @@ struct ControlButton: View {
 }
 
 struct SettingsGrid: View {
+    @Binding var selectedClockFormat: String?
+    @Binding var selectedDisplayMode: String?
     @State private var toggleState_countDown = true
     @State private var toggleState_isLand = true
-    @State private var selectedDisplayMode: String? = "Speed"
-    @State private var selectedClockFormat: String? = "MS"
     
     var body: some View {
         VStack(spacing: 60) {
             HStack(spacing: 20) {
-                
                 SettingsItem(icon: .custom(name: "SettingsDisplayMode"), title: "显示内容", subtitle: "时钟",
                              buttonType: .customImageButton("OptionsMenu", [
-                                SettingsItem.MenuItem(id: "Speed", title: "Speed", action: { selectedDisplayMode = "Speed" }),
-                                SettingsItem.MenuItem(id: "Refresh", title: "Refresh", action: { selectedDisplayMode = "Refresh" }),
-                                SettingsItem.MenuItem(id: "Clock", title: "Clock", action: { selectedDisplayMode = "Clock" })
+                                SettingsItem.MenuItem(id: "Speed", title: "实时速率", action: {
+                                    selectedDisplayMode = "Speed"
+                                    print("Speed option clicked") }),
+                                SettingsItem.MenuItem(id: "Refresh", title: "实时刷新率", action: {
+                                    selectedDisplayMode = "Refresh"
+                                    print("Refresh option clicked") }),
+                                SettingsItem.MenuItem(id: "Clock", title: "时钟", action: {
+                                    selectedDisplayMode = "Clock"
+                                    print("Clock option clicked") })
                              ], $selectedDisplayMode))
                 
                 SettingsItem(icon: .custom(name: "SettingsClock"), title: "时钟格式", subtitle: "格式|时:分:秒:毫秒",
                              buttonType: .customImageButton("OptionsMenu", [
-                                SettingsItem.MenuItem(id: "MS", title: "MS", action: { selectedClockFormat = "MS" }),
-                                SettingsItem.MenuItem(id: "SS-MS", title: "SS-MS", action: { selectedClockFormat = "SS-MS" }),
-                                SettingsItem.MenuItem(id: "MM-SS-MS", title: "MM-SS-MS", action: { selectedClockFormat = "MM-SS-MS" }),
-                                SettingsItem.MenuItem(id: "HH-MM-SS-MS", title: "HH-MM-SS-MS", action: { selectedClockFormat = "HH-MM-SS-MS" })
+                                SettingsItem.MenuItem(id: "SS-MS", title: "秒:毫秒", action: { selectedClockFormat = "SS-MS" }),
+                                SettingsItem.MenuItem(id: "MM-SS-MS", title: "分:秒:毫秒", action: { selectedClockFormat = "MM-SS-MS" }),
+                                SettingsItem.MenuItem(id: "HH-MM-SS-MS", title: "时:分:秒:毫秒", action: { selectedClockFormat = "HH-MM-SS-MS" })
                              ], $selectedClockFormat))
-                
             }
             
             HStack(spacing: 20) {
-                
                 SettingsItem(icon: .custom(name: "SettingsHourglass"), title: "倒计时", subtitle: "最近事件|茅台",
                              buttonType: .toggle($toggleState_countDown))
                 
                 SettingsItem(icon: .custom(name: "SettingsIsland"), title: "灵动岛", subtitle: "设备状态|支持",
                              buttonType: .toggle($toggleState_isLand))
-                
             }
         }
         .padding(.top, 40)
-        
     }
 }
 
@@ -220,6 +246,8 @@ struct SettingsItem: View {
         .frame(width: 160, height: 100)
     }
 }
+
+
 
 #Preview {
     MainContentView()
