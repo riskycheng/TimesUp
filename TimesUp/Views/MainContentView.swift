@@ -99,24 +99,27 @@ struct ControlButton: View {
 struct SettingsGrid: View {
     @State private var toggleState_countDown = true
     @State private var toggleState_isLand = true
+    @State private var selectedDisplayMode: String? = "Speed"
+    @State private var selectedClockFormat: String? = "MS"
+    
     var body: some View {
         VStack(spacing: 60) {
             HStack(spacing: 20) {
                 
                 SettingsItem(icon: .custom(name: "SettingsDisplayMode"), title: "显示内容", subtitle: "时钟",
                              buttonType: .customImageButton("OptionsMenu", [
-                                SettingsItem.MenuItem(title: "Speed", icon: .system(name: "speedometer"), action: { print("Speed option clicked") }),
-                                SettingsItem.MenuItem(title: "Refresh", icon: .system(name: "arrow.clockwise"), action: { print("Refresh option clicked") }),
-                                SettingsItem.MenuItem(title: "Clock", icon: .system(name: "clock"), action: { print("Clock option clicked") })
-                             ]))
+                                SettingsItem.MenuItem(id: "Speed", title: "Speed", action: { selectedDisplayMode = "Speed" }),
+                                SettingsItem.MenuItem(id: "Refresh", title: "Refresh", action: { selectedDisplayMode = "Refresh" }),
+                                SettingsItem.MenuItem(id: "Clock", title: "Clock", action: { selectedDisplayMode = "Clock" })
+                             ], $selectedDisplayMode))
                 
                 SettingsItem(icon: .custom(name: "SettingsClock"), title: "时钟格式", subtitle: "格式|时:分:秒:毫秒",
                              buttonType: .customImageButton("OptionsMenu", [
-                                SettingsItem.MenuItem(title: "MS", icon: .custom(name: "SettingsClock"), action: { print("MS option clicked") }),
-                                SettingsItem.MenuItem(title: "SS-MS", icon: .custom(name: "SettingsClock"), action: { print("SS-MS option clicked") }),
-                                SettingsItem.MenuItem(title: "MM-SS-MS", icon: .custom(name: "SettingsClock"), action: { print("MM-SS-MS option clicked") }),
-                                SettingsItem.MenuItem(title: "HH-MM-SS-MS", icon: .custom(name: "SettingsClock"), action: { print("HH-MM-SS-MS option clicked") })
-                             ]))
+                                SettingsItem.MenuItem(id: "MS", title: "MS", action: { selectedClockFormat = "MS" }),
+                                SettingsItem.MenuItem(id: "SS-MS", title: "SS-MS", action: { selectedClockFormat = "SS-MS" }),
+                                SettingsItem.MenuItem(id: "MM-SS-MS", title: "MM-SS-MS", action: { selectedClockFormat = "MM-SS-MS" }),
+                                SettingsItem.MenuItem(id: "HH-MM-SS-MS", title: "HH-MM-SS-MS", action: { selectedClockFormat = "HH-MM-SS-MS" })
+                             ], $selectedClockFormat))
                 
             }
             
@@ -149,12 +152,12 @@ struct SettingsItem: View {
     enum ButtonType {
         case toggle(Binding<Bool>)
         case systemImageButton(String, () -> Void)
-        case customImageButton(String, [MenuItem])
+        case customImageButton(String, [MenuItem], Binding<String?>)
     }
     
-    struct MenuItem {
+    struct MenuItem: Identifiable {
+        let id: String
         let title: String
-        let icon: IconType?
         let action: () -> Void
     }
 
@@ -182,24 +185,19 @@ struct SettingsItem: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                     }
-                case .customImageButton(let imageName, let menuItems):
+                case .customImageButton(let imageName, let menuItems, let selectedOption):
                     Menu {
-                        ForEach(menuItems, id: \.title) { item in
-                            Button(action: item.action) {
-                                if let icon = item.icon {
-                                    switch icon {
-                                    case .system(let name):
-                                        Label(item.title, systemImage: name)
-                                    case .custom(let name):
-                                        HStack {
-                                            Image(name)
-                                                .resizable()
-                                                .frame(width: 16, height: 16)
-                                            Text(item.title)
-                                        }
-                                    }
-                                } else {
+                        ForEach(menuItems) { item in
+                            Button(action: {
+                                item.action()
+                                selectedOption.wrappedValue = item.id
+                            }) {
+                                HStack {
                                     Text(item.title)
+                                    Spacer()
+                                    if selectedOption.wrappedValue == item.id {
+                                        Image("Check")
+                                    }
                                 }
                             }
                         }
