@@ -76,6 +76,7 @@ struct TimerView: View {
                         Spacer()
                     }
                     .frame(width: geometry.size.width * 0.2, alignment: .center)
+                    .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
                     
                     Spacer()
                     
@@ -85,15 +86,15 @@ struct TimerView: View {
                     }
                     .frame(width: geometry.size.width * 0.6, alignment: .center)
                 }
-                .padding()
                 .foregroundColor(.white)
+                .frame(alignment: .center)
             }
         }
         .padding()
         .onReceive(timer) { input in
             self.currentTime = input
         }
-        .frame(height: 150)
+        .frame(height: 160, alignment: .center)
     }
     
     private var currentTimeFormatted: String {
