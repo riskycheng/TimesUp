@@ -8,10 +8,113 @@
 import SwiftUI
 
 struct ListContentView: View {
+    
+    @State private var selectedTab = 0
+    
+    let actionItems = [
+        ActionItem(mainTitle: "京东｜茅台", dueDate: Date(), link: "https://www.jd.com"),
+        ActionItem(mainTitle: "天猫｜茅台", dueDate: Date(), link: "https://www.tmall.com"),
+        ActionItem(mainTitle: "苏宁｜茅台", dueDate: Date(), link: "https://www.suning.com"),
+        ActionItem(mainTitle: "京东｜iPhone 15", dueDate: Date(), link: "https://www.jd.com"),
+        ActionItem(mainTitle: "京东｜vivo X fold 3 Pro", dueDate: Date(), link: "https://www.jd.com"),
+        ActionItem(mainTitle: "京东｜Lenovo笔记本", dueDate: Date(), link: "https://www.jd.com"),
+        ActionItem(mainTitle: "拼多多｜Xiaomi 14 Ultra", dueDate: Date(), link: "https://www.jd.com")
+    ]
+    
+    var filteredItems: [ActionItem] {
+            switch selectedTab {
+            case 1:
+                return actionItems.filter { !$0.isOutOfDate }
+            case 2:
+                return actionItems.filter { $0.isOutOfDate }
+            default:
+                return actionItems
+            }
+        }
+    
+    
     var body: some View {
-        Text("This is ToDo List!")
+            NavigationView {
+                VStack {
+                    Text("代办事件")
+                        .font(.largeTitle)
+                        .bold()
+                    Picker("", selection: $selectedTab) {
+                        Text("全部").tag(0)
+                        Text("待进行").tag(1)
+                        Text("已完成").tag(2)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+
+                    List(filteredItems) { item in
+                        ActionItemRow(actionItem: item)
+                            .listRowBackground(Color.clear)
+                    }
+                    .listStyle(PlainListStyle())
+                    .background(Color(UIColor.systemGroupedBackground))
+                }
+                .navigationBarHidden(true)
+            }
+        }
+}
+
+
+
+struct ActionItemRow: View {
+    var actionItem: ActionItem
+
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        return formatter
+    }
+
+    var body: some View {
+        HStack {
+            Rectangle()
+                .fill(Color.blue)
+                .frame(width: 5)
+                .cornerRadius(2.5)
+                .padding(.leading, -8) // Adjust for better alignment
+
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(actionItem.mainTitle)
+                        .font(.headline)
+                    Spacer()
+                    NavigationLink(destination: Text("详细信息")) {
+                        Text("查看详情")
+                            .foregroundColor(.blue)
+                    }
+                }
+                HStack {
+                    Image(systemName: "doc.text")
+                    Text(actionItem.isOutOfDate ? "已过期" : "进行中")
+                        .font(.caption)
+                        .foregroundColor(actionItem.isOutOfDate ? .red : .green)
+                }
+                HStack {
+                    Image(systemName: "link")
+                    Text(actionItem.link)
+                        .font(.footnote)
+                        .foregroundColor(.blue)
+                }
+                HStack {
+                    Image(systemName: "calendar")
+                    Text("\(actionItem.dueDate, formatter: dateFormatter)")
+                        .font(.subheadline)
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(radius: 2)
+        }
+        .padding([.top, .bottom], 5)
     }
 }
+
 
 #Preview {
     ListContentView()

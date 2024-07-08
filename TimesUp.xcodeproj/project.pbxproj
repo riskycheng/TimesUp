@@ -17,6 +17,7 @@
 		CF4D84122C38FE9F00D07701 /* ListContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84112C38FE9F00D07701 /* ListContentView.swift */; };
 		CF4D84142C38FEBA00D07701 /* SettingsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84132C38FEBA00D07701 /* SettingsContentView.swift */; };
 		CF4D84162C3A6F4600D07701 /* GIFImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84152C3A6F4600D07701 /* GIFImageView.swift */; };
+		CF4D841A2C3C2B9200D07701 /* ActionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84192C3C2B9200D07701 /* ActionItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		CF4D84112C38FE9F00D07701 /* ListContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListContentView.swift; sourceTree = "<group>"; };
 		CF4D84132C38FEBA00D07701 /* SettingsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsContentView.swift; sourceTree = "<group>"; };
 		CF4D84152C3A6F4600D07701 /* GIFImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImageView.swift; sourceTree = "<group>"; };
+		CF4D84192C3C2B9200D07701 /* ActionItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 		CF4D840A2C38F11A00D07701 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CF4D84192C3C2B9200D07701 /* ActionItem.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF4D841A2C3C2B9200D07701 /* ActionItem.swift in Sources */,
 				CF4D83FC2C37F71000D07701 /* ContentView.swift in Sources */,
 				CF4D840E2C38F14A00D07701 /* K.swift in Sources */,
 				CF4D83FA2C37F71000D07701 /* TimesUpApp.swift in Sources */,
