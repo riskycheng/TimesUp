@@ -35,9 +35,9 @@ struct HeaderView: View {
                 .frame(alignment: .center)
                 .padding(EdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 0))
             Spacer()
-            Image(systemName: "timer")
-                .resizable()
-                .frame(width: 40, height: 40)
+            GIFImageView(gifName: "stopwatch_anim")
+                            .frame(width: 100, height: 100)
+                            .padding()
         }
         .frame(maxWidth: .infinity)
         .frame(height: 160)
