@@ -72,44 +72,61 @@ struct ActionItemRow: View {
 
     var body: some View {
         HStack {
-            Rectangle()
-                .fill(Color.blue)
-                .frame(width: 5)
-                .cornerRadius(2.5)
-                .padding(.leading, -8) // Adjust for better alignment
-
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(actionItem.mainTitle)
-                        .font(.headline)
-                    Spacer()
-                    NavigationLink(destination: Text("详细信息")) {
-                        Text("查看详情")
+            ZStack {
+                UnevenRoundedRectangle(cornerRadii: .init(topLeading: 10, bottomLeading: 10))
+                    .fill(Color.blue)
+                    .frame(width: 24)
+                    .padding(EdgeInsets(top: 20, leading: -10, bottom: 20, trailing: 0))
+                
+                Text("进行中")
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
+                    .frame(width: 20, alignment: .center)
+                    .font(.system(size: 12))
+                    .bold()
+                    .padding(.leading, -10)
+            }
+            HStack {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(actionItem.mainTitle)
+                            .font(.headline)
+                            .lineLimit(1)
+                        Spacer()
+                    }
+                    HStack {
+                        Image(systemName: "doc.text")
+                        Text(actionItem.isOutOfDate ? "已过期" : "进行中")
+                            .font(.caption)
+                            .foregroundColor(actionItem.isOutOfDate ? .red : .green)
+                    }
+                    HStack {
+                        Image(systemName: "link")
+                        Text(actionItem.link)
+                            .font(.footnote)
                             .foregroundColor(.blue)
                     }
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("\(actionItem.dueDate, formatter: dateFormatter)")
+                            .font(.subheadline)
+                    }
                 }
+                
+                Spacer()
+                
                 HStack {
-                    Image(systemName: "doc.text")
-                    Text(actionItem.isOutOfDate ? "已过期" : "进行中")
-                        .font(.caption)
-                        .foregroundColor(actionItem.isOutOfDate ? .red : .green)
+                    NavigationLink(destination: Text("详细信息")) {
+
+                    }
                 }
-                HStack {
-                    Image(systemName: "link")
-                    Text(actionItem.link)
-                        .font(.footnote)
-                        .foregroundColor(.blue)
-                }
-                HStack {
-                    Image(systemName: "calendar")
-                    Text("\(actionItem.dueDate, formatter: dateFormatter)")
-                        .font(.subheadline)
-                }
+                .fixedSize()
             }
             .padding()
             .background(Color.white)
             .cornerRadius(10)
             .shadow(radius: 2)
+            .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: 0))
         }
         .padding([.top, .bottom], 5)
     }
