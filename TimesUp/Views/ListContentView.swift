@@ -128,8 +128,13 @@ struct ActionItemRow: View {
                 Spacer()
                 
                 HStack {
-                    NavigationLink(destination: Text("详细信息")) {
-
+                    NavigationLink(destination: 
+                    {
+                        // navigate to view
+                        DetailsAddView()
+                    }
+                    ) {
+                        // content in current view
                     }
                 }
                 .fixedSize()
