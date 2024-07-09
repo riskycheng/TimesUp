@@ -50,9 +50,12 @@ struct ListContentView: View {
                     List(filteredItems) { item in
                         ActionItemRow(actionItem: item)
                             .listRowBackground(Color.clear)
+                            .padding(.vertical, 10) // Increase the gap between items
+                            .listRowSeparator(.hidden)
                     }
                     .listStyle(PlainListStyle())
-                    .background(Color(UIColor.systemGroupedBackground))
+                    .background(Color.clear)
+                    .scrollContentBackground(.hidden)
                 }
                 .navigationBarHidden(true)
             }
@@ -96,18 +99,27 @@ struct ActionItemRow: View {
                     }
                     HStack {
                         Image(systemName: "doc.text")
+                            .foregroundColor(.blue)
                         Text(actionItem.isOutOfDate ? "已过期" : "进行中")
                             .font(.caption)
                             .foregroundColor(actionItem.isOutOfDate ? .red : .green)
                     }
+                    
+                    Spacer(minLength: 20)
+                    
                     HStack {
-                        Image(systemName: "link")
+                        Image(systemName: "link.circle.fill")
+                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
                         Text(actionItem.link)
                             .font(.footnote)
                             .foregroundColor(.blue)
                     }
+                    
+                    Spacer(minLength: -10)
+                    
                     HStack {
                         Image(systemName: "calendar")
+                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
                         Text("\(actionItem.dueDate, formatter: dateFormatter)")
                             .font(.subheadline)
                     }
