@@ -136,7 +136,6 @@ struct ActionItemRow: View {
                     ) {
                         // content in current view
                     }
-                    .navigationBarTitle("Back", displayMode: .inline)
                 }
                 .fixedSize()
             }
