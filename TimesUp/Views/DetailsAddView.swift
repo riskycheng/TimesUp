@@ -54,7 +54,7 @@ struct DetailsAddView: View {
                                 .labelsHidden()
                         }
                     }
-
+                    
                     Section(header: Text("Periodic Reminder")) {
                         Toggle(isOn: $isReminderOn) {
                             Text("Enable Reminder")
@@ -68,7 +68,7 @@ struct DetailsAddView: View {
                             }
                         }
                         .navigationBarBackButtonHidden(true)
-                       
+                        
                         NavigationLink(destination: TimePickerView(time: $date)) {
                             HStack {
                                 Text("Reminder Time")
@@ -83,7 +83,7 @@ struct DetailsAddView: View {
         }
         .navigationBarBackButtonHidden(true) // Hide the default back button
     }
-
+    
     private var timeFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
@@ -110,22 +110,22 @@ struct RepeatDaysView: View {
             }
         }
         .navigationBarBackButtonHidden(true) // Hide the default back button
-               .toolbar {
-                   ToolbarItemGroup(placement: .navigationBarLeading) {
-                       Button("Cancel") {
-                           self.presentationMode.wrappedValue.dismiss()
-                       }
-                   }
-                   ToolbarItemGroup(placement: .navigationBarTrailing) {
-                       Button("Add") {
-                           self.presentationMode.wrappedValue.dismiss()
-                       }
-                   }
-                   ToolbarItemGroup(placement: .principal) {
-                       Text("选择重复周期")
-                           .font(.headline)
-                   }
-               }
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button("Add") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+            ToolbarItemGroup(placement: .principal) {
+                Text("选择重复周期")
+                    .font(.headline)
+            }
+        }
     }
 }
 
@@ -135,7 +135,7 @@ struct MultipleSelectionRow: View {
     var action: () -> Void
     
     @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
         Button(action: self.action) {
             HStack {
@@ -151,9 +151,9 @@ struct MultipleSelectionRow: View {
 
 struct TimePickerView: View {
     @Binding var time: Date
-
+    
     @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
         VStack {
             DatePicker("Select Time", selection: $time, displayedComponents: .hourAndMinute)
@@ -162,22 +162,22 @@ struct TimePickerView: View {
             Spacer()
         }
         .navigationBarBackButtonHidden(true) // Hide the default back button
-               .toolbar {
-                   ToolbarItemGroup(placement: .navigationBarLeading) {
-                       Button("Cancel") {
-                           self.presentationMode.wrappedValue.dismiss()
-                       }
-                   }
-                   ToolbarItemGroup(placement: .navigationBarTrailing) {
-                       Button("Add") {
-                           self.presentationMode.wrappedValue.dismiss()
-                       }
-                   }
-                   ToolbarItemGroup(placement: .principal) {
-                       Text("选择提醒时间")
-                           .font(.headline)
-                   }
-               }
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button("Add") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+            ToolbarItemGroup(placement: .principal) {
+                Text("选择提醒时间")
+                    .font(.headline)
+            }
+        }
     }
 }
 
