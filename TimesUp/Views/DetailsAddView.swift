@@ -13,11 +13,31 @@ struct DetailsAddView: View {
     @State private var date = Date()
     @State private var isReminderOn: Bool = false
     @State private var repeatDays: [String] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
+    
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-
+                
+                HStack {
+                }.toolbar {
+                    ToolbarItemGroup(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Button("Add") {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                    ToolbarItemGroup(placement: .principal) {
+                        Text("新建事件")
+                            .font(.headline)
+                    }
+                }
+                
                 Form {
                     Section {
                         HStack {
@@ -47,6 +67,8 @@ struct DetailsAddView: View {
                                     .foregroundColor(.blue)
                             }
                         }
+                        .navigationBarBackButtonHidden(true)
+                       
                         NavigationLink(destination: TimePickerView(time: $date)) {
                             HStack {
                                 Text("Reminder Time")
@@ -59,6 +81,7 @@ struct DetailsAddView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true) // Hide the default back button
     }
 
     private var timeFormatter: DateFormatter {
@@ -71,7 +94,9 @@ struct DetailsAddView: View {
 struct RepeatDaysView: View {
     @Binding var repeatDays: [String]
     let allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
+    
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         List {
             ForEach(allDays, id: \.self) { day in
@@ -84,7 +109,23 @@ struct RepeatDaysView: View {
                 }
             }
         }
-        .navigationTitle("选择重复周期")
+        .navigationBarBackButtonHidden(true) // Hide the default back button
+               .toolbar {
+                   ToolbarItemGroup(placement: .navigationBarLeading) {
+                       Button("Cancel") {
+                           self.presentationMode.wrappedValue.dismiss()
+                       }
+                   }
+                   ToolbarItemGroup(placement: .navigationBarTrailing) {
+                       Button("Add") {
+                           self.presentationMode.wrappedValue.dismiss()
+                       }
+                   }
+                   ToolbarItemGroup(placement: .principal) {
+                       Text("选择重复周期")
+                           .font(.headline)
+                   }
+               }
     }
 }
 
@@ -92,6 +133,8 @@ struct MultipleSelectionRow: View {
     var title: String
     var isSelected: Bool
     var action: () -> Void
+    
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         Button(action: self.action) {
@@ -109,6 +152,8 @@ struct MultipleSelectionRow: View {
 struct TimePickerView: View {
     @Binding var time: Date
 
+    @Environment(\.presentationMode) var presentationMode
+
     var body: some View {
         VStack {
             DatePicker("Select Time", selection: $time, displayedComponents: .hourAndMinute)
@@ -116,7 +161,23 @@ struct TimePickerView: View {
                 .datePickerStyle(WheelDatePickerStyle())
             Spacer()
         }
-        .navigationTitle("选择提醒时间")
+        .navigationBarBackButtonHidden(true) // Hide the default back button
+               .toolbar {
+                   ToolbarItemGroup(placement: .navigationBarLeading) {
+                       Button("Cancel") {
+                           self.presentationMode.wrappedValue.dismiss()
+                       }
+                   }
+                   ToolbarItemGroup(placement: .navigationBarTrailing) {
+                       Button("Add") {
+                           self.presentationMode.wrappedValue.dismiss()
+                       }
+                   }
+                   ToolbarItemGroup(placement: .principal) {
+                       Text("选择提醒时间")
+                           .font(.headline)
+                   }
+               }
     }
 }
 
