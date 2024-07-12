@@ -36,32 +36,55 @@ struct ListContentView: View {
     var body: some View {
             NavigationView {
                 VStack {
-                    Text("代办事件")
-                        .font(.largeTitle)
-                        .bold()
-                    Picker("", selection: $selectedTab) {
-                        Text("全部").tag(0)
-                        Text("待进行").tag(1)
-                        Text("已完成").tag(2)
+                    ListHeaderView()
+                    
+                    VStack {
+                        Picker("", selection: $selectedTab) {
+                            Text("全部").tag(0)
+                            Text("待进行").tag(1)
+                            Text("已完成").tag(2)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding()
+                        
+                        List(filteredItems) { item in
+                            ActionItemRow(actionItem: item)
+                                .listRowBackground(Color.clear)
+                                .padding(.vertical, 10) // Increase the gap between items
+                                .listRowSeparator(.hidden)
+                        }
+                        .listStyle(PlainListStyle())
+                        .scrollContentBackground(.hidden)
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
-
-                    List(filteredItems) { item in
-                        ActionItemRow(actionItem: item)
-                            .listRowBackground(Color.clear)
-                            .padding(.vertical, 10) // Increase the gap between items
-                            .listRowSeparator(.hidden)
-                    }
-                    .listStyle(PlainListStyle())
-                    .background(Color.clear)
-                    .scrollContentBackground(.hidden)
+                    .background(.white)
+                    .cornerRadius(20.0)
+                    .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
                 }
                 .navigationBarHidden(true)
+                .edgesIgnoringSafeArea(.top)
             }
         }
 }
 
+struct ListHeaderView: View {
+    var body: some View {
+        HStack {
+            Text("待办事件")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(alignment: .center)
+                .padding(EdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 0))
+            Spacer()
+            GIFImageView(gifName: "mailbox_anim")
+                            .frame(width: 100, height: 100)
+                            .padding()
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 160)
+        .background(.mainContentHeaderBlue)
+    }
+}
 
 
 struct ActionItemRow: View {

@@ -21,7 +21,6 @@ struct MainContentView: View {
             
         }
         .edgesIgnoringSafeArea(.top)
-        .background(.gray)
     }
 }
 
