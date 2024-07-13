@@ -1,12 +1,4 @@
-//
-//  ListContentView.swift
-//  TimesUp
-//
-//  Created by Jian Cheng on 2024/7/6.
-//
-
 import SwiftUI
-
 import CoreData
 
 struct ListContentView: View {
@@ -58,21 +50,6 @@ struct ListContentView: View {
                     }
                     .listStyle(PlainListStyle())
                     .scrollContentBackground(.hidden)
-                    
-                    Button(action: {
-                        isAddingNewItem = true
-                    }) {
-                        Text("Add New Item")
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                    }
-                    .padding()
-                    .sheet(isPresented: $isAddingNewItem) {
-                        DetailsAddView(isPresented: $isAddingNewItem)
-                            .environment(\.managedObjectContext, viewContext)
-                    }
                 }
                 .background(.white)
                 .cornerRadius(20.0)
@@ -80,6 +57,30 @@ struct ListContentView: View {
             }
             .navigationBarHidden(true)
             .edgesIgnoringSafeArea(.top)
+            .overlay(
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            isAddingNewItem = true
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 30)) // Enlarge the plus icon
+                                .foregroundColor(.white)
+                                .frame(width: 60, height: 60)
+                                .background(Color.blue)
+                                .clipShape(Circle())
+                                .shadow(radius: 5)
+                        }
+                        .padding()
+                    }
+                }
+            )
+            .sheet(isPresented: $isAddingNewItem) {
+                DetailsAddView(isPresented: $isAddingNewItem)
+                    .environment(\.managedObjectContext, viewContext)
+            }
         }
     }
     
@@ -198,7 +199,6 @@ struct ListHeaderView: View {
         .background(Color.mainContentHeaderBlue)
     }
 }
-
 
 #Preview {
     ListContentView()

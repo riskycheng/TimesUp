@@ -1,10 +1,3 @@
-//
-//  DetailsAddView.swift
-//  TimesUp
-//
-//  Created by Jian Cheng on 2024/7/9.
-//
-
 import SwiftUI
 import CoreData
 
@@ -31,7 +24,6 @@ struct DetailsAddView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                
                 HStack {
                 }.toolbar {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
