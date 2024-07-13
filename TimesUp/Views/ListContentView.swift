@@ -10,6 +10,7 @@ import SwiftUI
 struct ListContentView: View {
     
     @State private var selectedTab = 0
+    @State private var selectedItem: ActionItem?
     
     let actionItems = [
         ActionItem(mainTitle: "京东｜茅台", dueDate: Date(), link: "https://www.jd.com"),
@@ -22,73 +23,54 @@ struct ListContentView: View {
     ]
     
     var filteredItems: [ActionItem] {
-            switch selectedTab {
-            case 1:
-                return actionItems.filter { !$0.isOutOfDate }
-            case 2:
-                return actionItems.filter { $0.isOutOfDate }
-            default:
-                return actionItems
-            }
+        switch selectedTab {
+        case 1:
+            return actionItems.filter { !$0.isOutOfDate }
+        case 2:
+            return actionItems.filter { $0.isOutOfDate }
+        default:
+            return actionItems
         }
-    
+    }
     
     var body: some View {
-            NavigationView {
+        NavigationView {
+            VStack {
+                ListHeaderView()
+                
                 VStack {
-                    ListHeaderView()
-                    
-                    VStack {
-                        Picker("", selection: $selectedTab) {
-                            Text("全部").tag(0)
-                            Text("待进行").tag(1)
-                            Text("已完成").tag(2)
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .padding()
-                        
-                        List(filteredItems) { item in
-                            ActionItemRow(actionItem: item)
-                                .listRowBackground(Color.clear)
-                                .padding(.vertical, 10) // Increase the gap between items
-                                .listRowSeparator(.hidden)
-                        }
-                        .listStyle(PlainListStyle())
-                        .scrollContentBackground(.hidden)
+                    Picker("", selection: $selectedTab) {
+                        Text("全部").tag(0)
+                        Text("待进行").tag(1)
+                        Text("已完成").tag(2)
                     }
-                    .background(.white)
-                    .cornerRadius(20.0)
-                    .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+                    
+                    List(filteredItems.indices, id: \.self) { index in
+                        ActionItemRow(actionItem: filteredItems[index], selectedItem: $selectedItem)
+                            .listRowBackground(Color.clear)
+                            .padding(.vertical, 10)
+                            .listRowSeparator(.hidden)
+                    }
+                    .listStyle(PlainListStyle())
+                    .scrollContentBackground(.hidden)
                 }
-                .navigationBarHidden(true)
-                .edgesIgnoringSafeArea(.top)
+                .background(.white)
+                .cornerRadius(20.0)
+                .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
             }
+            .navigationBarHidden(true)
+            .edgesIgnoringSafeArea(.top)
         }
-}
-
-struct ListHeaderView: View {
-    var body: some View {
-        HStack {
-            Text("待办事件")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .frame(alignment: .center)
-                .padding(EdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 0))
-            Spacer()
-            GIFImageView(gifName: "mailbox_anim")
-                            .frame(width: 100, height: 100)
-                            .padding()
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 160)
-        .background(.mainContentHeaderBlue)
     }
 }
 
 
+
 struct ActionItemRow: View {
     var actionItem: ActionItem
+    @Binding var selectedItem: ActionItem?
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -106,7 +88,7 @@ struct ActionItemRow: View {
                 
                 Text("进行中")
                     .foregroundStyle(.white)
-                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
+                    .multilineTextAlignment(.leading)
                     .frame(width: 20, alignment: .center)
                     .font(.system(size: 12))
                     .bold()
@@ -118,6 +100,7 @@ struct ActionItemRow: View {
                         Text(actionItem.mainTitle)
                             .font(.headline)
                             .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         Spacer()
                     }
                     HStack {
@@ -126,41 +109,38 @@ struct ActionItemRow: View {
                         Text(actionItem.isOutOfDate ? "已过期" : "进行中")
                             .font(.caption)
                             .foregroundColor(actionItem.isOutOfDate ? .red : .green)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
                     Spacer(minLength: 20)
                     
                     HStack {
                         Image(systemName: "link.circle.fill")
-                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                            .foregroundColor(.blue)
                         Text(actionItem.link)
                             .font(.footnote)
                             .foregroundColor(.blue)
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
                     Spacer(minLength: -10)
                     
                     HStack {
                         Image(systemName: "calendar")
-                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                            .foregroundColor(.blue)
                         Text("\(actionItem.dueDate, formatter: dateFormatter)")
                             .font(.subheadline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
+                .frame(minWidth: 200)
                 
                 Spacer()
                 
-                HStack {
-                    NavigationLink(destination: 
-                    {
-                        // navigate to view
-                        DetailsAddView()
-                    }
-                    ) {
-                        // content in current view
-                    }
+                NavigationLink(destination: DetailsAddView(actionItem: actionItem)) {
+                
                 }
-                .fixedSize()
             }
             .padding()
             .background(Color.white)
@@ -169,6 +149,28 @@ struct ActionItemRow: View {
             .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: 0))
         }
         .padding([.top, .bottom], 5)
+    }
+}
+
+
+
+struct ListHeaderView: View {
+    var body: some View {
+        HStack {
+            Text("待办事件")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(alignment: .center)
+                .padding(EdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 0))
+            Spacer()
+            GIFImageView(gifName: "mailbox_anim")
+                .frame(width: 100, height: 100)
+                .padding()
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 160)
+        .background(Color.mainContentHeaderBlue)
     }
 }
 

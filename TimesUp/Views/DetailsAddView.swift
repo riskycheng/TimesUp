@@ -16,6 +16,12 @@ struct DetailsAddView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    init(actionItem: ActionItem) {
+        _title = State(initialValue: actionItem.mainTitle)
+        _url = State(initialValue: actionItem.link)
+        _date = State(initialValue: actionItem.dueDate)
+    }
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
@@ -181,7 +187,6 @@ struct TimePickerView: View {
     }
 }
 
-
 #Preview {
-    DetailsAddView()
+    DetailsAddView(actionItem: ActionItem(mainTitle: "Sample Title", dueDate: Date(), link: "https://www.example.com"))
 }
