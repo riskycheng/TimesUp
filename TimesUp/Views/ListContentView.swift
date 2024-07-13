@@ -7,29 +7,29 @@
 
 import SwiftUI
 
+import CoreData
+
 struct ListContentView: View {
     
     @State private var selectedTab = 0
-    @State private var selectedItem: ActionItem?
+    @State private var selectedItem: ActionItemEntity?
+    @State private var isAddingNewItem = false
     
-    let actionItems = [
-        ActionItem(mainTitle: "京东｜茅台", dueDate: Date(), link: "https://www.jd.com"),
-        ActionItem(mainTitle: "天猫｜茅台", dueDate: Date(), link: "https://www.tmall.com"),
-        ActionItem(mainTitle: "苏宁｜茅台", dueDate: Date(), link: "https://www.suning.com"),
-        ActionItem(mainTitle: "京东｜iPhone 15", dueDate: Date(), link: "https://www.jd.com"),
-        ActionItem(mainTitle: "京东｜vivo X fold 3 Pro", dueDate: Date(), link: "https://www.jd.com"),
-        ActionItem(mainTitle: "京东｜Lenovo笔记本", dueDate: Date(), link: "https://www.jd.com"),
-        ActionItem(mainTitle: "拼多多｜Xiaomi 14 Ultra", dueDate: Date(), link: "https://www.jd.com")
-    ]
+    @FetchRequest(
+        entity: ActionItemEntity.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \ActionItemEntity.dueDate, ascending: true)]
+    ) var actionItems: FetchedResults<ActionItemEntity>
     
-    var filteredItems: [ActionItem] {
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    var filteredItems: [ActionItemEntity] {
         switch selectedTab {
         case 1:
-            return actionItems.filter { !$0.isOutOfDate }
+            return actionItems.filter { $0.dueDate ?? Date() > Date() }
         case 2:
-            return actionItems.filter { $0.isOutOfDate }
+            return actionItems.filter { $0.dueDate ?? Date() <= Date() }
         default:
-            return actionItems
+            return Array(actionItems)
         }
     }
     
@@ -47,14 +47,32 @@ struct ListContentView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .padding()
                     
-                    List(filteredItems.indices, id: \.self) { index in
-                        ActionItemRow(actionItem: filteredItems[index], selectedItem: $selectedItem)
-                            .listRowBackground(Color.clear)
-                            .padding(.vertical, 10)
-                            .listRowSeparator(.hidden)
+                    List {
+                        ForEach(filteredItems) { item in
+                            ActionItemRow(actionItem: item, selectedItem: $selectedItem)
+                                .listRowBackground(Color.clear)
+                                .padding(.vertical, 10)
+                                .listRowSeparator(.hidden)
+                        }
+                        .onDelete(perform: deleteItems)
                     }
                     .listStyle(PlainListStyle())
                     .scrollContentBackground(.hidden)
+                    
+                    Button(action: {
+                        isAddingNewItem = true
+                    }) {
+                        Text("Add New Item")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                    }
+                    .padding()
+                    .sheet(isPresented: $isAddingNewItem) {
+                        DetailsAddView(isPresented: $isAddingNewItem)
+                            .environment(\.managedObjectContext, viewContext)
+                    }
                 }
                 .background(.white)
                 .cornerRadius(20.0)
@@ -64,13 +82,23 @@ struct ListContentView: View {
             .edgesIgnoringSafeArea(.top)
         }
     }
+    
+    private func deleteItems(offsets: IndexSet) {
+        withAnimation {
+            offsets.map { filteredItems[$0] }.forEach(viewContext.delete)
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
 }
 
-
-
 struct ActionItemRow: View {
-    var actionItem: ActionItem
-    @Binding var selectedItem: ActionItem?
+    var actionItem: ActionItemEntity
+    @Binding var selectedItem: ActionItemEntity?
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -97,7 +125,7 @@ struct ActionItemRow: View {
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(actionItem.mainTitle)
+                        Text(actionItem.mainTitle ?? "")
                             .font(.headline)
                             .lineLimit(1)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -106,9 +134,9 @@ struct ActionItemRow: View {
                     HStack {
                         Image(systemName: "doc.text")
                             .foregroundColor(.blue)
-                        Text(actionItem.isOutOfDate ? "已过期" : "进行中")
+                        Text(actionItem.dueDate ?? Date() > Date() ? "进行中" : "已过期")
                             .font(.caption)
-                            .foregroundColor(actionItem.isOutOfDate ? .red : .green)
+                            .foregroundColor(actionItem.dueDate ?? Date() > Date() ? .green : .red)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     
@@ -117,7 +145,7 @@ struct ActionItemRow: View {
                     HStack {
                         Image(systemName: "link.circle.fill")
                             .foregroundColor(.blue)
-                        Text(actionItem.link)
+                        Text(actionItem.link ?? "")
                             .font(.footnote)
                             .foregroundColor(.blue)
                             .lineLimit(1)
@@ -129,7 +157,7 @@ struct ActionItemRow: View {
                     HStack {
                         Image(systemName: "calendar")
                             .foregroundColor(.blue)
-                        Text("\(actionItem.dueDate, formatter: dateFormatter)")
+                        Text("\(actionItem.dueDate ?? Date(), formatter: dateFormatter)")
                             .font(.subheadline)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -138,8 +166,7 @@ struct ActionItemRow: View {
                 
                 Spacer()
                 
-                NavigationLink(destination: DetailsAddView(actionItem: actionItem)) {
-                
+                NavigationLink(destination: DetailsAddView(isPresented: .constant(false), actionItem: actionItem)) {
                 }
             }
             .padding()
@@ -151,8 +178,6 @@ struct ActionItemRow: View {
         .padding([.top, .bottom], 5)
     }
 }
-
-
 
 struct ListHeaderView: View {
     var body: some View {

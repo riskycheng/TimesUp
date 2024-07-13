@@ -19,6 +19,9 @@
 		CF4D84162C3A6F4600D07701 /* GIFImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84152C3A6F4600D07701 /* GIFImageView.swift */; };
 		CF4D841A2C3C2B9200D07701 /* ActionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84192C3C2B9200D07701 /* ActionItem.swift */; };
 		CF4D841E2C3D7BA000D07701 /* DetailsAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D841D2C3D7BA000D07701 /* DetailsAddView.swift */; };
+		CF4D84232C4249E000D07701 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF4D84222C4249E000D07701 /* CoreData.framework */; };
+		CF4D84262C424A4300D07701 /* TimesUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84242C424A4300D07701 /* TimesUp.xcdatamodeld */; };
+		CF4D842C2C424E7200D07701 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D842B2C424E7200D07701 /* PersistenceController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		CF4D84152C3A6F4600D07701 /* GIFImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFImageView.swift; sourceTree = "<group>"; };
 		CF4D84192C3C2B9200D07701 /* ActionItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionItem.swift; sourceTree = "<group>"; };
 		CF4D841D2C3D7BA000D07701 /* DetailsAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsAddView.swift; sourceTree = "<group>"; };
+		CF4D84222C4249E000D07701 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		CF4D84252C424A4300D07701 /* ActionItemEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ActionItemEntity.xcdatamodel; sourceTree = "<group>"; };
+		CF4D842B2C424E7200D07701 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +51,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09AB85F2F580920D44CA66C4 /* Pods_TimesUp.framework in Frameworks */,
+				CF4D84232C4249E000D07701 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				CF4D84192C3C2B9200D07701 /* ActionItem.swift */,
+				CF4D84242C424A4300D07701 /* TimesUp.xcdatamodeld */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -132,6 +140,7 @@
 		CF4D840C2C38F12A00D07701 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CF4D842B2C424E7200D07701 /* PersistenceController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -139,6 +148,7 @@
 		FE5891924AE92BB98B192F3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CF4D84222C4249E000D07701 /* CoreData.framework */,
 				1DE150A7D9A767C3C35A7480 /* Pods_TimesUp.framework */,
 			);
 			name = Frameworks;
@@ -262,9 +272,11 @@
 				CF4D841A2C3C2B9200D07701 /* ActionItem.swift in Sources */,
 				CF4D83FC2C37F71000D07701 /* ContentView.swift in Sources */,
 				CF4D840E2C38F14A00D07701 /* K.swift in Sources */,
+				CF4D842C2C424E7200D07701 /* PersistenceController.swift in Sources */,
 				CF4D83FA2C37F71000D07701 /* TimesUpApp.swift in Sources */,
 				CF4D84142C38FEBA00D07701 /* SettingsContentView.swift in Sources */,
 				CF4D84162C3A6F4600D07701 /* GIFImageView.swift in Sources */,
+				CF4D84262C424A4300D07701 /* TimesUp.xcdatamodeld in Sources */,
 				CF4D84102C38FE8C00D07701 /* MainContentView.swift in Sources */,
 				CF4D84122C38FE9F00D07701 /* ListContentView.swift in Sources */,
 			);
@@ -474,6 +486,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		CF4D84242C424A4300D07701 /* TimesUp.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CF4D84252C424A4300D07701 /* ActionItemEntity.xcdatamodel */,
+			);
+			currentVersion = CF4D84252C424A4300D07701 /* ActionItemEntity.xcdatamodel */;
+			path = TimesUp.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CF4D83EE2C37F71000D07701 /* Project object */;
 }

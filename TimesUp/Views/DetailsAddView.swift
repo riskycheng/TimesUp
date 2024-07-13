@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct DetailsAddView: View {
     @State private var title: String = ""
@@ -15,11 +16,16 @@ struct DetailsAddView: View {
     @State private var repeatDays: [String] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) private var viewContext
+    @Binding var isPresented: Bool
     
-    init(actionItem: ActionItem) {
-        _title = State(initialValue: actionItem.mainTitle)
-        _url = State(initialValue: actionItem.link)
-        _date = State(initialValue: actionItem.dueDate)
+    init(isPresented: Binding<Bool>, actionItem: ActionItemEntity? = nil) {
+        self._isPresented = isPresented
+        if let actionItem = actionItem {
+            _title = State(initialValue: actionItem.mainTitle ?? "")
+            _url = State(initialValue: actionItem.link ?? "")
+            _date = State(initialValue: actionItem.dueDate ?? Date())
+        }
     }
     
     var body: some View {
@@ -31,11 +37,14 @@ struct DetailsAddView: View {
                     ToolbarItemGroup(placement: .navigationBarLeading) {
                         Button("Cancel") {
                             self.presentationMode.wrappedValue.dismiss()
+                            isPresented = false
                         }
                     }
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button("Add") {
+                        Button("Save") {
+                            saveItem()
                             self.presentationMode.wrappedValue.dismiss()
+                            isPresented = false
                         }
                     }
                     ToolbarItemGroup(placement: .principal) {
@@ -94,6 +103,20 @@ struct DetailsAddView: View {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter
+    }
+    
+    private func saveItem() {
+        let newItem = ActionItemEntity(context: viewContext)
+        newItem.mainTitle = title
+        newItem.link = url
+        newItem.dueDate = date
+        
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
 }
 
@@ -188,5 +211,5 @@ struct TimePickerView: View {
 }
 
 #Preview {
-    DetailsAddView(actionItem: ActionItem(mainTitle: "Sample Title", dueDate: Date(), link: "https://www.example.com"))
+    DetailsAddView(isPresented: .constant(true))
 }
