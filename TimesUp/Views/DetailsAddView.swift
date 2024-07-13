@@ -12,8 +12,11 @@ struct DetailsAddView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var isPresented: Bool
     
+    var actionItem: ActionItemEntity?
+    
     init(isPresented: Binding<Bool>, actionItem: ActionItemEntity? = nil) {
         self._isPresented = isPresented
+        self.actionItem = actionItem
         if let actionItem = actionItem {
             _title = State(initialValue: actionItem.mainTitle ?? "")
             _url = State(initialValue: actionItem.link ?? "")
@@ -33,14 +36,18 @@ struct DetailsAddView: View {
                         }
                     }
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button("Save") {
-                            saveItem()
+                        Button(actionItem == nil ? "Add" : "Save") {
+                            if let actionItem = actionItem {
+                                updateItem(actionItem)
+                            } else {
+                                saveNewItem()
+                            }
                             self.presentationMode.wrappedValue.dismiss()
                             isPresented = false
                         }
                     }
                     ToolbarItemGroup(placement: .principal) {
-                        Text("新建事件")
+                        Text(actionItem == nil ? "新建事件" : "编辑事件")
                             .font(.headline)
                     }
                 }
@@ -97,11 +104,24 @@ struct DetailsAddView: View {
         return formatter
     }
     
-    private func saveItem() {
+    private func saveNewItem() {
         let newItem = ActionItemEntity(context: viewContext)
         newItem.mainTitle = title
         newItem.link = url
         newItem.dueDate = date
+        
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    private func updateItem(_ item: ActionItemEntity) {
+        item.mainTitle = title
+        item.link = url
+        item.dueDate = date
         
         do {
             try viewContext.save()

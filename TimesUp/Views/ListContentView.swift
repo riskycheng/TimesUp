@@ -41,7 +41,7 @@ struct ListContentView: View {
                     
                     List {
                         ForEach(filteredItems) { item in
-                            ActionItemRow(actionItem: item, selectedItem: $selectedItem)
+                            ActionItemRow(actionItem: item, selectedItem: $selectedItem, isAddingNewItem: $isAddingNewItem)
                                 .listRowBackground(Color.clear)
                                 .padding(.vertical, 10)
                                 .listRowSeparator(.hidden)
@@ -63,6 +63,7 @@ struct ListContentView: View {
                     HStack {
                         Spacer()
                         Button(action: {
+                            selectedItem = nil
                             isAddingNewItem = true
                         }) {
                             Image(systemName: "plus")
@@ -78,7 +79,7 @@ struct ListContentView: View {
                 }
             )
             .sheet(isPresented: $isAddingNewItem) {
-                DetailsAddView(isPresented: $isAddingNewItem)
+                DetailsAddView(isPresented: $isAddingNewItem, actionItem: selectedItem)
                     .environment(\.managedObjectContext, viewContext)
             }
         }
@@ -100,6 +101,7 @@ struct ListContentView: View {
 struct ActionItemRow: View {
     var actionItem: ActionItemEntity
     @Binding var selectedItem: ActionItemEntity?
+    @Binding var isAddingNewItem: Bool
 
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -168,6 +170,7 @@ struct ActionItemRow: View {
                 Spacer()
                 
                 NavigationLink(destination: DetailsAddView(isPresented: .constant(false), actionItem: actionItem)) {
+                    EmptyView()
                 }
             }
             .padding()
@@ -177,6 +180,10 @@ struct ActionItemRow: View {
             .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: 0))
         }
         .padding([.top, .bottom], 5)
+        .onTapGesture {
+            selectedItem = actionItem
+            isAddingNewItem = true
+        }
     }
 }
 
