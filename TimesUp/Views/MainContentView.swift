@@ -1,28 +1,26 @@
 import SwiftUI
 
 struct MainContentView: View {
-    @State private var selectedClockFormat: String? = "HH-MM-SS-MS"
-    @State private var selectedDisplayMode: String? = "Clock"
-    
+    @Binding var selectedTab: Int
+
     var body: some View {
         VStack {
             HeaderView()
-            
+
             VStack {
-                TimerView(selectedFormat: $selectedClockFormat)
+                TimerView(selectedFormat: .constant("HH-MM-SS-MS"))
                 ControlButton()
-                SettingsGrid(selectedClockFormat: $selectedClockFormat, selectedDisplayMode: $selectedDisplayMode)
+                SettingsGrid(selectedClockFormat: .constant("HH-MM-SS-MS"), selectedDisplayMode: .constant("Clock"))
                 Spacer()
             }
             .background(.white)
             .cornerRadius(20.0)
             .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
-            
-            
         }
         .edgesIgnoringSafeArea(.top)
     }
 }
+
 
 struct HeaderView: View {
     var body: some View {
@@ -263,5 +261,5 @@ struct SettingsItem: View {
 
 
 #Preview {
-    MainContentView()
+    MainContentView(selectedTab: .constant(1))
 }

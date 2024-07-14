@@ -1,44 +1,45 @@
-//
-//  ContentView.swift
-//  TimesUp
-//
-//  Created by Jian Cheng on 2024/7/5.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedTab = 1 // Default to the 2nd tab
+
     var body: some View {
-        TabView(selection: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Selection@*/.constant(1)/*@END_MENU_TOKEN@*/) {
+        TabView(selection: $selectedTab) {
             // TAB - A
-            VStack{
-                MainContentView()
-            }.tabItem {
+            VStack {
+                MainContentView(selectedTab: $selectedTab)
+            }
+            .tabItem {
                 VStack {
                     Image(systemName: "house.fill")
                     Text(K.TAB_NAME_TAB_1)
                 }
-            }.tag(1)
-            
+            }
+            .tag(1)
+
             // TAB - B
-            VStack{
-                ListContentView()
-            }.tabItem {
+            VStack {
+                ListContentView(selectedTab: $selectedTab)
+            }
+            .tabItem {
                 VStack {
                     Image(systemName: "alarm.fill")
                     Text(K.TAB_NAME_TAB_2)
                 }
-            }.tag(2)
-            
+            }
+            .tag(2)
+
             // TAB - C
-            VStack{
+            VStack {
                 SettingsContentView()
-            }.tabItem {
+            }
+            .tabItem {
                 VStack {
                     Image(systemName: "gearshape.fill")
                     Text(K.TAB_NAME_TAB_3)
                 }
-            }.tag(3)
+            }
+            .tag(3)
         }
     }
 }

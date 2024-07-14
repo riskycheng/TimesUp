@@ -2,18 +2,17 @@ import SwiftUI
 import CoreData
 
 struct ListContentView: View {
-    
-    @State private var selectedTab = 0
+    @Binding var selectedTab: Int
     @State private var selectedItem: ActionItemEntity?
     @State private var isAddingNewItem = false
-    
+
     @FetchRequest(
         entity: ActionItemEntity.entity(),
         sortDescriptors: [NSSortDescriptor(keyPath: \ActionItemEntity.dueDate, ascending: true)]
     ) var actionItems: FetchedResults<ActionItemEntity>
-    
+
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     var filteredItems: [ActionItemEntity] {
         switch selectedTab {
         case 1:
@@ -24,12 +23,12 @@ struct ListContentView: View {
             return Array(actionItems)
         }
     }
-    
+
     var body: some View {
         NavigationView {
             VStack {
                 ListHeaderView()
-                
+
                 VStack {
                     Picker("", selection: $selectedTab) {
                         Text("全部").tag(0)
@@ -38,7 +37,7 @@ struct ListContentView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .padding()
-                    
+
                     List {
                         ForEach(filteredItems) { item in
                             ActionItemRow(actionItem: item, selectedItem: $selectedItem, isAddingNewItem: $isAddingNewItem)
@@ -65,6 +64,7 @@ struct ListContentView: View {
                         Button(action: {
                             selectedItem = nil
                             isAddingNewItem = true
+                            selectedTab = 2 // Ensure the 2nd tab is selected
                         }) {
                             Image(systemName: "plus")
                                 .font(.system(size: 30)) // Enlarge the plus icon
@@ -84,7 +84,7 @@ struct ListContentView: View {
             }
         }
     }
-    
+
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { filteredItems[$0] }.forEach(viewContext.delete)
@@ -97,6 +97,7 @@ struct ListContentView: View {
         }
     }
 }
+
 
 struct ActionItemRow: View {
     var actionItem: ActionItemEntity
@@ -208,5 +209,5 @@ struct ListHeaderView: View {
 }
 
 #Preview {
-    ListContentView()
+    ListContentView(selectedTab: .constant(1))
 }
