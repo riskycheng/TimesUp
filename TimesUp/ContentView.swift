@@ -19,7 +19,7 @@ struct ContentView: View {
 
             // TAB - B
             VStack {
-                ListContentView(selectedTab: $selectedTab)
+                ListContentView()
             }
             .tabItem {
                 VStack {

@@ -2,7 +2,7 @@ import SwiftUI
 import CoreData
 
 struct ListContentView: View {
-    @Binding var selectedTab: Int
+    @State var selectedPicker = 0
     @State private var selectedItem: ActionItemEntity?
     @State private var isAddingNewItem = false
 
@@ -14,7 +14,7 @@ struct ListContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     var filteredItems: [ActionItemEntity] {
-        switch selectedTab {
+        switch selectedPicker {
         case 1:
             return actionItems.filter { $0.dueDate ?? Date() > Date() }
         case 2:
@@ -30,7 +30,7 @@ struct ListContentView: View {
                 ListHeaderView()
 
                 VStack {
-                    Picker("", selection: $selectedTab) {
+                    Picker("", selection: $selectedPicker) {
                         Text("全部").tag(0)
                         Text("待进行").tag(1)
                         Text("已完成").tag(2)
@@ -64,7 +64,7 @@ struct ListContentView: View {
                         Button(action: {
                             selectedItem = nil
                             isAddingNewItem = true
-                            selectedTab = 2 // Ensure the 2nd tab is selected
+                            selectedPicker = 2 // Ensure the 2nd tab is selected
                         }) {
                             Image(systemName: "plus")
                                 .font(.system(size: 30)) // Enlarge the plus icon
@@ -209,5 +209,5 @@ struct ListHeaderView: View {
 }
 
 #Preview {
-    ListContentView(selectedTab: .constant(1))
+    ListContentView()
 }
