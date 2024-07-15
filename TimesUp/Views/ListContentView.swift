@@ -114,11 +114,11 @@ struct ActionItemRow: View {
         HStack {
             ZStack {
                 UnevenRoundedRectangle(cornerRadii: .init(topLeading: 10, bottomLeading: 10))
-                    .fill(Color.blue)
+                    .fill(actionItem.dueDate ?? Date() > Date() ? Color("ActionItem_Ongoing") : Color("ActionItem_Ended"))
                     .frame(width: 24)
                     .padding(EdgeInsets(top: 20, leading: -10, bottom: 20, trailing: 0))
                 
-                Text("进行中")
+                Text(actionItem.dueDate ?? Date() > Date() ? "进行中" : "已过期")
                     .foregroundStyle(.white)
                     .multilineTextAlignment(.leading)
                     .frame(width: 20, alignment: .center)
