@@ -5,7 +5,6 @@ struct ListContentView: View {
     @State var selectedPicker = 0
     @State private var selectedItem: ActionItemEntity?
     @State private var isAddingNewItem = false
-    @State private var isNavigationActive = false
 
     @FetchRequest(
         entity: ActionItemEntity.entity(),
@@ -46,8 +45,7 @@ struct ListContentView: View {
                                 .padding(.vertical, 10)
                                 .listRowSeparator(.hidden)
                                 .onTapGesture {
-                                    selectedItem = item
-                                    isNavigationActive = true
+                                    selectItem(item)
                                 }
                         }
                         .onDelete(perform: deleteItems)
@@ -69,10 +67,10 @@ struct ListContentView: View {
                         Button(action: {
                             selectedItem = nil
                             isAddingNewItem = true
-                            //isNavigationActive = true // Comment this out
+                            print("Adding New Item")
                         }) {
                             Image(systemName: "plus")
-                                .font(.system(size: 30)) // Enlarge the plus icon
+                                .font(.system(size: 30))
                                 .foregroundColor(.white)
                                 .frame(width: 60, height: 60)
                                 .background(Color.blue)
@@ -88,6 +86,11 @@ struct ListContentView: View {
                     .environment(\.managedObjectContext, viewContext)
             }
         }
+        .onChange(of: selectedItem) { _ in
+            if selectedItem != nil {
+                isAddingNewItem = true
+            }
+        }
     }
 
     private func deleteItems(offsets: IndexSet) {
@@ -101,8 +104,12 @@ struct ListContentView: View {
             }
         }
     }
-}
 
+    private func selectItem(_ item: ActionItemEntity) {
+        selectedItem = item
+        print("Selected Item: \(String(describing: selectedItem?.mainTitle))")
+    }
+}
 
 struct ActionItemRow: View {
     var actionItem: ActionItemEntity
@@ -185,6 +192,7 @@ struct ActionItemRow: View {
         .onTapGesture {
             selectedItem = actionItem
             isAddingNewItem = true
+            print("Tapped on item: \(actionItem.mainTitle ?? "")")
         }
     }
 }

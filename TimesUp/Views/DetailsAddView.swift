@@ -7,22 +7,23 @@ struct DetailsAddView: View {
     @State private var date = Date()
     @State private var isReminderOn: Bool = false
     @State private var repeatDays: [String] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    
+
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) private var viewContext
     @Binding var isPresented: Bool
-    
+
     var actionItem: ActionItemEntity?
-    
-// Updated init method to initialize state variables with actionItem values
+
     init(isPresented: Binding<Bool>, actionItem: ActionItemEntity? = nil) {
         self._isPresented = isPresented
         self.actionItem = actionItem
-        self._title = State(initialValue: actionItem?.mainTitle ?? "")
-        self._url = State(initialValue: actionItem?.link ?? "")
-        self._date = State(initialValue: actionItem?.dueDate ?? Date())
+        if let actionItem = actionItem {
+            _title = State(initialValue: actionItem.mainTitle ?? "")
+            _url = State(initialValue: actionItem.link ?? "")
+            _date = State(initialValue: actionItem.dueDate ?? Date())
+        }
     }
-    
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
@@ -50,7 +51,7 @@ struct DetailsAddView: View {
                             .font(.headline)
                     }
                 }
-                
+
                 Form {
                     Section {
                         HStack {
@@ -67,7 +68,7 @@ struct DetailsAddView: View {
                                 .labelsHidden()
                         }
                     }
-                    
+
                     Section(header: Text("Periodic Reminder")) {
                         Toggle(isOn: $isReminderOn) {
                             Text("Enable Reminder")
@@ -81,7 +82,7 @@ struct DetailsAddView: View {
                             }
                         }
                         .navigationBarBackButtonHidden(true)
-                        
+
                         NavigationLink(destination: TimePickerView(time: $date)) {
                             HStack {
                                 Text("Reminder Time")
@@ -96,19 +97,19 @@ struct DetailsAddView: View {
         }
         .navigationBarBackButtonHidden(true) // Hide the default back button
     }
-    
+
     private var timeFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter
     }
-    
+
     private func saveNewItem() {
         let newItem = ActionItemEntity(context: viewContext)
         newItem.mainTitle = title
         newItem.link = url
         newItem.dueDate = date
-        
+
         do {
             try viewContext.save()
         } catch {
@@ -116,12 +117,12 @@ struct DetailsAddView: View {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
-    
+
     private func updateItem(_ item: ActionItemEntity) {
         item.mainTitle = title
         item.link = url
         item.dueDate = date
-        
+
         do {
             try viewContext.save()
         } catch {
@@ -131,12 +132,14 @@ struct DetailsAddView: View {
     }
 }
 
+
+
 struct RepeatDaysView: View {
     @Binding var repeatDays: [String]
     let allDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    
+
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         List {
             ForEach(allDays, id: \.self) { day in
@@ -173,9 +176,9 @@ struct MultipleSelectionRow: View {
     var title: String
     var isSelected: Bool
     var action: () -> Void
-    
+
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         Button(action: self.action) {
             HStack {
@@ -191,9 +194,9 @@ struct MultipleSelectionRow: View {
 
 struct TimePickerView: View {
     @Binding var time: Date
-    
+
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         VStack {
             DatePicker("Select Time", selection: $time, displayedComponents: .hourAndMinute)
