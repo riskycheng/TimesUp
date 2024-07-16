@@ -14,14 +14,13 @@ struct DetailsAddView: View {
     
     var actionItem: ActionItemEntity?
     
+// Updated init method to initialize state variables with actionItem values
     init(isPresented: Binding<Bool>, actionItem: ActionItemEntity? = nil) {
         self._isPresented = isPresented
         self.actionItem = actionItem
-        if let actionItem = actionItem {
-            _title = State(initialValue: actionItem.mainTitle ?? "")
-            _url = State(initialValue: actionItem.link ?? "")
-            _date = State(initialValue: actionItem.dueDate ?? Date())
-        }
+        self._title = State(initialValue: actionItem?.mainTitle ?? "")
+        self._url = State(initialValue: actionItem?.link ?? "")
+        self._date = State(initialValue: actionItem?.dueDate ?? Date())
     }
     
     var body: some View {

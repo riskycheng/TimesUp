@@ -5,6 +5,7 @@ struct ListContentView: View {
     @State var selectedPicker = 0
     @State private var selectedItem: ActionItemEntity?
     @State private var isAddingNewItem = false
+    @State private var isNavigationActive = false
 
     @FetchRequest(
         entity: ActionItemEntity.entity(),
@@ -44,6 +45,10 @@ struct ListContentView: View {
                                 .listRowBackground(Color.clear)
                                 .padding(.vertical, 10)
                                 .listRowSeparator(.hidden)
+                                .onTapGesture {
+                                    selectedItem = item
+                                    isNavigationActive = true
+                                }
                         }
                         .onDelete(perform: deleteItems)
                     }
@@ -53,6 +58,13 @@ struct ListContentView: View {
                 .background(.white)
                 .cornerRadius(20.0)
                 .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
+
+                NavigationLink(
+                    destination: DetailsAddView(isPresented: .constant(false), actionItem: selectedItem),
+                    isActive: $isNavigationActive
+                ) {
+                    EmptyView()
+                }
             }
             .navigationBarHidden(true)
             .edgesIgnoringSafeArea(.top)
@@ -64,6 +76,7 @@ struct ListContentView: View {
                         Button(action: {
                             selectedItem = nil
                             isAddingNewItem = true
+                            isNavigationActive = true // Navigate to add new item
                             selectedPicker = 2 // Ensure the 2nd tab is selected
                         }) {
                             Image(systemName: "plus")
@@ -169,10 +182,6 @@ struct ActionItemRow: View {
                 .frame(minWidth: 200)
                 
                 Spacer()
-                
-                NavigationLink(destination: DetailsAddView(isPresented: .constant(false), actionItem: actionItem)) {
-                    EmptyView()
-                }
             }
             .padding()
             .background(Color.white)
