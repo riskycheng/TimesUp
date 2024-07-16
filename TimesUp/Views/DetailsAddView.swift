@@ -112,6 +112,7 @@ struct DetailsAddView: View {
 
         do {
             try viewContext.save()
+            NotificationCenter.default.post(name: .NSManagedObjectContextDidSave, object: viewContext)
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
@@ -125,12 +126,14 @@ struct DetailsAddView: View {
 
         do {
             try viewContext.save()
+            NotificationCenter.default.post(name: .NSManagedObjectContextDidSave, object: viewContext)
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }
+
 
 
 

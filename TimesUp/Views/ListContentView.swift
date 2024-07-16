@@ -5,6 +5,7 @@ struct ListContentView: View {
     @State var selectedPicker = 0
     @State private var selectedItem: ActionItemEntity?
     @State private var isAddingNewItem = false
+    @State private var refreshID = UUID()
 
     @FetchRequest(
         entity: ActionItemEntity.entity(),
@@ -85,11 +86,15 @@ struct ListContentView: View {
                 DetailsAddView(isPresented: $isAddingNewItem, actionItem: selectedItem)
                     .environment(\.managedObjectContext, viewContext)
             }
-        }
-        .onChange(of: selectedItem) { _ in
-            if selectedItem != nil {
-                isAddingNewItem = true
+            .onChange(of: selectedItem) { _ in
+                if selectedItem != nil {
+                    isAddingNewItem = true
+                }
             }
+            .onCoreDataChange {
+                refresh()
+            }
+            .id(refreshID)
         }
     }
 
@@ -98,6 +103,7 @@ struct ListContentView: View {
             offsets.map { filteredItems[$0] }.forEach(viewContext.delete)
             do {
                 try viewContext.save()
+                NotificationCenter.default.post(name: .NSManagedObjectContextDidSave, object: viewContext)
             } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
@@ -108,6 +114,11 @@ struct ListContentView: View {
     private func selectItem(_ item: ActionItemEntity) {
         selectedItem = item
         print("Selected Item: \(String(describing: selectedItem?.mainTitle))")
+    }
+
+    private func refresh() {
+        // This will cause the view to re-fetch the data and refresh the list
+        refreshID = UUID()
     }
 }
 

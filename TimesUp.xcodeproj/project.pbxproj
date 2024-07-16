@@ -22,6 +22,7 @@
 		CF4D84232C4249E000D07701 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF4D84222C4249E000D07701 /* CoreData.framework */; };
 		CF4D84262C424A4300D07701 /* TimesUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CF4D84242C424A4300D07701 /* TimesUp.xcdatamodeld */; };
 		CF4D842C2C424E7200D07701 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4D842B2C424E7200D07701 /* PersistenceController.swift */; };
+		CF7411092C473CCB002B0732 /* CoreDataChangeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7411082C473CCB002B0732 /* CoreDataChangeObserver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		CF4D84222C4249E000D07701 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		CF4D84252C424A4300D07701 /* ActionItemEntity.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ActionItemEntity.xcdatamodel; sourceTree = "<group>"; };
 		CF4D842B2C424E7200D07701 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		CF7411082C473CCB002B0732 /* CoreDataChangeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataChangeObserver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				CF4D842B2C424E7200D07701 /* PersistenceController.swift */,
+				CF7411082C473CCB002B0732 /* CoreDataChangeObserver.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				CF4D841A2C3C2B9200D07701 /* ActionItem.swift in Sources */,
 				CF4D83FC2C37F71000D07701 /* ContentView.swift in Sources */,
 				CF4D840E2C38F14A00D07701 /* K.swift in Sources */,
+				CF7411092C473CCB002B0732 /* CoreDataChangeObserver.swift in Sources */,
 				CF4D842C2C424E7200D07701 /* PersistenceController.swift in Sources */,
 				CF4D83FA2C37F71000D07701 /* TimesUpApp.swift in Sources */,
 				CF4D84142C38FEBA00D07701 /* SettingsContentView.swift in Sources */,
