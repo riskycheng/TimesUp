@@ -58,13 +58,6 @@ struct ListContentView: View {
                 .background(.white)
                 .cornerRadius(20.0)
                 .padding(EdgeInsets(top: -30, leading: 0, bottom: 0, trailing: 0))
-
-                NavigationLink(
-                    destination: DetailsAddView(isPresented: .constant(false), actionItem: selectedItem),
-                    isActive: $isNavigationActive
-                ) {
-                    EmptyView()
-                }
             }
             .navigationBarHidden(true)
             .edgesIgnoringSafeArea(.top)
@@ -76,8 +69,7 @@ struct ListContentView: View {
                         Button(action: {
                             selectedItem = nil
                             isAddingNewItem = true
-                            isNavigationActive = true // Navigate to add new item
-                            selectedPicker = 2 // Ensure the 2nd tab is selected
+                            //isNavigationActive = true // Comment this out
                         }) {
                             Image(systemName: "plus")
                                 .font(.system(size: 30)) // Enlarge the plus icon
