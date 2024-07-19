@@ -2,15 +2,17 @@ import SwiftUI
 
 struct MainContentView: View {
     @Binding var selectedTab: Int
+    @State private var selectedClockFormat: String? = "HH-MM-SS-MS"
+    @State private var selectedDisplayMode: String? = "Clock"
 
     var body: some View {
         VStack {
             HeaderView()
 
             VStack {
-                TimerView(selectedFormat: .constant("HH-MM-SS-MS"))
+                TimerView(selectedFormat: $selectedClockFormat)
                 ControlButton()
-                SettingsGrid(selectedClockFormat: .constant("HH-MM-SS-MS"), selectedDisplayMode: .constant("Clock"))
+                SettingsGrid(selectedClockFormat: $selectedClockFormat, selectedDisplayMode: $selectedDisplayMode)
                 Spacer()
             }
             .background(.white)
@@ -33,8 +35,8 @@ struct HeaderView: View {
                 .padding(EdgeInsets(top: 30, leading: 20, bottom: 0, trailing: 0))
             Spacer()
             GIFImageView(gifName: "stopwatch_anim")
-                            .frame(width: 100, height: 100)
-                            .padding()
+                .frame(width: 100, height: 100)
+                .padding()
         }
         .frame(maxWidth: .infinity)
         .frame(height: 160)
@@ -261,5 +263,5 @@ struct SettingsItem: View {
 
 
 #Preview {
-    MainContentView(selectedTab: .constant(1))
+MainContentView(selectedTab: .constant(1))
 }
