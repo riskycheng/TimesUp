@@ -45,9 +45,6 @@ struct ListContentView: View {
                                 .listRowBackground(Color.clear)
                                 .padding(.vertical, 10)
                                 .listRowSeparator(.hidden)
-                                .onTapGesture {
-                                    selectItem(item)
-                                }
                         }
                         .onDelete(perform: deleteItems)
                     }
@@ -86,8 +83,8 @@ struct ListContentView: View {
                 DetailsAddView(isPresented: $isAddingNewItem, actionItem: selectedItem)
                     .environment(\.managedObjectContext, viewContext)
             }
-            .onChange(of: selectedItem) { _ in
-                if selectedItem != nil {
+            .onChange(of: selectedItem) { oldValue, newValue in
+                if newValue != nil {
                     isAddingNewItem = true
                 }
             }
@@ -109,11 +106,6 @@ struct ListContentView: View {
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
-    }
-
-    private func selectItem(_ item: ActionItemEntity) {
-        selectedItem = item
-        print("Selected Item: \(String(describing: selectedItem?.mainTitle))")
     }
 
     private func refresh() {
@@ -192,6 +184,17 @@ struct ActionItemRow: View {
                 .frame(minWidth: 200)
                 
                 Spacer()
+
+                Button(action: {
+                    selectedItem = actionItem
+                    isAddingNewItem = true
+                    print("Tapped on navigation icon: \(actionItem.mainTitle ?? "")")
+                }) {
+                    Image(systemName: "chevron.right.circle.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(.blue)
+                }
+                .padding(.trailing, 10)
             }
             .padding()
             .background(Color.white)
@@ -200,11 +203,7 @@ struct ActionItemRow: View {
             .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: 0))
         }
         .padding([.top, .bottom], 5)
-        .onTapGesture {
-            selectedItem = actionItem
-            isAddingNewItem = true
-            print("Tapped on item: \(actionItem.mainTitle ?? "")")
-        }
+        .contentShape(Rectangle()) // Ensures the whole row is tappable, but does not trigger the button
     }
 }
 
