@@ -190,11 +190,11 @@ struct ActionItemRow: View {
                     isAddingNewItem = true
                     print("Tapped on navigation icon: \(actionItem.mainTitle ?? "")")
                 }) {
-                    Image(systemName: "chevron.right.circle.fill")
-                        .font(.system(size: 30))
-                        .foregroundColor(.blue)
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 20))
+                        .foregroundColor(.gray)
                 }
-                .padding(.trailing, 10)
+                .padding(.trailing, 0)
             }
             .padding()
             .background(Color.white)
