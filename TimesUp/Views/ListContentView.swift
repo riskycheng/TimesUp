@@ -126,84 +126,101 @@ struct ActionItemRow: View {
     }
 
     var body: some View {
-        HStack {
-            ZStack {
-                UnevenRoundedRectangle(cornerRadii: .init(topLeading: 10, bottomLeading: 10))
-                    .fill(actionItem.dueDate ?? Date() > Date() ? Color("ActionItem_Ongoing") : Color("ActionItem_Ended"))
-                    .frame(width: 24)
-                    .padding(EdgeInsets(top: 20, leading: -10, bottom: 20, trailing: 0))
-                
-                Text(actionItem.dueDate ?? Date() > Date() ? "进行中" : "已过期")
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.leading)
-                    .frame(width: 20, alignment: .center)
-                    .font(.system(size: 12))
-                    .bold()
-                    .padding(.leading, -10)
+        Menu {
+            Button(action: {
+                selectedItem = actionItem
+                isAddingNewItem = true
+            }) {
+                Text("编辑此条")
+                Image(systemName: "pencil.circle")
+                    .foregroundColor(.blue)
             }
-            HStack {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text(actionItem.mainTitle ?? "")
-                            .font(.headline)
-                            .lineLimit(1)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Spacer()
-                    }
-                    HStack {
-                        Image(systemName: "doc.text")
-                            .foregroundColor(.blue)
-                        Text(actionItem.dueDate ?? Date() > Date() ? "进行中" : "已过期")
-                            .font(.caption)
-                            .foregroundColor(actionItem.dueDate ?? Date() > Date() ? .green : .red)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    
-                    Spacer(minLength: 20)
-                    
-                    HStack {
-                        Image(systemName: "link.circle.fill")
-                            .foregroundColor(.blue)
-                        Text(actionItem.link ?? "")
-                            .font(.footnote)
-                            .foregroundColor(.blue)
-                            .lineLimit(1)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    
-                    Spacer(minLength: -10)
-                    
-                    HStack {
-                        Image(systemName: "calendar")
-                            .foregroundColor(.blue)
-                        Text("\(actionItem.dueDate ?? Date(), formatter: dateFormatter)")
-                            .font(.subheadline)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                }
-                .frame(minWidth: 200)
-                
-                Spacer()
 
-                Button(action: {
-                    selectedItem = actionItem
-                    isAddingNewItem = true
-                    print("Tapped on navigation icon: \(actionItem.mainTitle ?? "")")
-                }) {
+            Button(action: {
+                if let urlString = actionItem.link, let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                } else {
+                    print("Invalid URL")
+                }
+            }) {
+                Text("跳转链接")
+                Image(systemName: "link.circle")
+                    .foregroundColor(.blue)
+            }
+        } label: {
+            HStack {
+                ZStack {
+                    UnevenRoundedRectangle(cornerRadii: .init(topLeading: 10, bottomLeading: 10))
+                        .fill(actionItem.dueDate ?? Date() > Date() ? Color("ActionItem_Ongoing") : Color("ActionItem_Ended"))
+                        .frame(width: 24)
+                        .padding(EdgeInsets(top: 20, leading: -10, bottom: 20, trailing: 0))
+                    
+                    Text(actionItem.dueDate ?? Date() > Date() ? "进行中" : "已过期")
+                        .foregroundStyle(.white)
+                        .multilineTextAlignment(.leading)
+                        .frame(width: 20, alignment: .center)
+                        .font(.system(size: 12))
+                        .bold()
+                        .padding(.leading, -10)
+                }
+                HStack {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(actionItem.mainTitle ?? "")
+                                .font(.headline)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Spacer()
+                        }
+                        HStack {
+                            Image(systemName: "doc.text")
+                                .foregroundColor(.blue)
+                            Text(actionItem.dueDate ?? Date() > Date() ? "进行中" : "已过期")
+                                .font(.caption)
+                                .foregroundColor(actionItem.dueDate ?? Date() > Date() ? .green : .red)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        
+                        Spacer(minLength: 20)
+                        
+                        HStack {
+                            Image(systemName: "link.circle.fill")
+                                .foregroundColor(.blue)
+                            Text(actionItem.link ?? "")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        
+                        Spacer(minLength: -10)
+                        
+                        HStack {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.blue)
+                            Text("\(actionItem.dueDate ?? Date(), formatter: dateFormatter)")
+                                .font(.subheadline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                    .frame(minWidth: 200)
+                    
+                    Spacer()
+
                     Image(systemName: "chevron.right")
                         .font(.system(size: 20))
                         .foregroundColor(.gray)
+                        .padding(.trailing, 0)
                 }
-                .padding(.trailing, 0)
+                .padding()
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(radius: 2)
+                .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: 0))
             }
-            .padding()
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 2)
-            .padding(EdgeInsets(top: 0, leading: -10, bottom: 0, trailing: 0))
+            .padding([.top, .bottom], 5)
+            .contentShape(Rectangle()) // Ensures the whole row is tappable, but does not trigger the button
         }
-        .padding([.top, .bottom], 5)
-        .contentShape(Rectangle()) // Ensures the whole row is tappable, but does not trigger the button
     }
 }
 
